@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AC Coaching - Calcul Calories</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body, html { margin:0; padding:0; height:100%; font-family:'Inter',sans-serif; }
+    .bg-video { position:fixed;top:0;left:0;min-width:100%;min-height:100%;z-index:-1;object-fit:cover; }
+    .overlay { position:relative; z-index:1; padding:20px; max-width:600px;margin:50px auto; border-radius:10px;
+      background:rgba(255,255,255,0.85); transition:background .3s,color .3s; }
+    .light-mode .overlay { background:rgba(255,255,255,0.9); color:black; }
+    .dark-mode .overlay { background:rgba(0,0,0,0.6); color:white; }
+    form { display:flex; flex-direction:column; gap:10px; margin-top:20px; }
+    label, select, input, button { font-size:1rem; }
+    input, select { padding:8px; border:1px solid #ccc; border-radius:5px; }
+    button { padding:10px; border:none; border-radius:5px; background:#e63946; color:white; cursor:pointer; }
+    details { margin-top:10px; }
+    .footer-links { display:flex; justify-content:center; gap:15px; flex-wrap:wrap; margin-top:30px; }
+    .footer-links a, .footer-links button { display:inline-flex;align-items:center;gap:8px;
+      background:rgba(255,255,255,0.2);padding:8px 12px;border-radius:5px;text-decoration:none;color:inherit;font-weight:bold; }
+    .flag-icon { width:20px;height:14px; }
+    .help-bubble { position:fixed;bottom:20px;right:20px;background:white;color:#e63946;border:2px solid #e63946;border-radius:50%;width:50px;height:50px;display:flex;justify-content:center;align-items:center;font-size:24px;cursor:pointer;z-index:10; }
+    .help-popup { position:fixed;bottom:80px;right:20px;background:white;border-radius:8px;padding:15px;box-shadow:0 4px 12px rgba(0,0,0,0.3);max-width:300px;font-size:14px;display:none;z-index:11;color:#333; }
+    .branding { position:absolute;top:10px;left:10px;background:rgba(255,255,255,0.6);padding:6px 10px;border-radius:8px;color:#e63946;font-weight:bold;font-size:1.2rem;z-index:2;display:flex;align-items:center;gap:10px; }
+    .branding img { height:24px; }
+  </style>
+</head>
+<body class="dark-mode">
+  <div class="branding">
+    <img src="logo-ac.png" alt="AC Coaching Logo">
+    AC Coaching ⚡
+  </div>
+  <video autoplay muted loop class="bg-video" id="bgVideo"><source src="12.mp4"></video>
+  <div class="overlay">
+    <!-- contenu du formulaire et script JS ici -->
+  </div>
+</body>
+</html>
