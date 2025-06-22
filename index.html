@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Calcul MB - Vidéo Fond</title>
+  <title>Calcul MB - Coach Alexis</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
     body, html {
@@ -62,7 +62,6 @@
       border: none;
       background-color: #e63946;
       color: white;
-      font-family: 'Inter', sans-serif;
     }
     .footer-links {
       display: flex;
@@ -82,7 +81,6 @@
       background: rgba(255,255,255,0.2);
       padding: 8px 12px;
       border-radius: 5px;
-      font-family: 'Inter', sans-serif;
     }
     .flag-icon {
       width: 20px;
@@ -196,6 +194,7 @@
     const flagIcon = document.getElementById('flagIcon');
     const langText = document.getElementById('langText');
     let isDark = true, isFrench = true;
+
     function toggleMode() {
       isDark = !isDark;
       body.classList.toggle('dark-mode');
@@ -203,16 +202,53 @@
       modeIcon.textContent = isDark ? '🌙' : '☀️';
       bgVideo.src = isDark ? 'video-night.mp4' : 'video-day.mp4';
     }
+
     function toggleLang() {
       isFrench = !isFrench;
       flagIcon.src = isFrench ? 'https://flagcdn.com/fr.svg' : 'https://flagcdn.com/es.svg';
       langText.textContent = isFrench ? 'Français' : 'Español';
       document.getElementById("titre").textContent = isFrench ? 'Calcul de ton métabolisme de base' : 'Calcula tu metabolismo basal';
     }
+
     function toggleHelp() {
       const popup = document.getElementById('helpPopup');
       popup.style.display = popup.style.display === 'block' ? 'none' : 'block';
     }
+
+    document.querySelector('form').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const poids = parseFloat(document.getElementById('poids').value);
+      const taille = parseFloat(document.getElementById('taille').value);
+      const age = parseFloat(document.getElementById('age').value);
+      const sexe = document.getElementById('sexe').value;
+      const objectif = document.getElementById('objectif').value;
+
+      if (!poids || !taille || !age || !sexe || !objectif) {
+        alert("Merci de remplir tous les champs !");
+        return;
+      }
+
+      let mb;
+      if (sexe === 'homme') {
+        mb = 66.5 + (13.75 * poids) + (5.003 * taille) - (6.775 * age);
+      } else {
+        mb = 655.1 + (9.563 * poids) + (1.850 * taille) - (4.676 * age);
+      }
+
+      let coef = {
+        'deficit10': 0.80,
+        'deficit5': 0.90,
+        'maintien': 1.00,
+        'surplus5': 1.10,
+        'surplus10': 1.20
+      }[objectif];
+
+      const total = Math.round(mb * coef);
+
+      alert(`🔥 Ton besoin calorique estimé est de ${total} kcal / jour`);
+    });
   </script>
 </body>
 </html>
+
