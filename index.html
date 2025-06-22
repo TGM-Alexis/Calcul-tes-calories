@@ -6,18 +6,20 @@
   <title>Calcul MB - Coach Alexis</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    /* Styles inchangés */
     body, html { margin:0; padding:0; height:100%; font-family:'Inter',sans-serif; }
     .bg-video { position:fixed;top:0;left:0;min-width:100%;min-height:100%;z-index:-1;object-fit:cover; }
-    .overlay { position:relative; z-index:1; padding:20px; max-width:600px;margin:50px auto; border-radius:10px; background:rgba(255,255,255,0.85); transition:background .3s,color .3s; }
+    .overlay { position:relative; z-index:1; padding:20px; max-width:600px;margin:50px auto; border-radius:10px;
+      background:rgba(255,255,255,0.85); transition:background .3s,color .3s; }
     .light-mode .overlay { background:rgba(255,255,255,0.9); color:black; }
     .dark-mode .overlay { background:rgba(0,0,0,0.6); color:white; }
     form { display:flex; flex-direction:column; gap:10px; margin-top:20px; }
     label, select, input, button { font-size:1rem; }
     input, select { padding:8px; border:1px solid #ccc; border-radius:5px; }
     button { padding:10px; border:none; border-radius:5px; background:#e63946; color:white; cursor:pointer; }
+    details { margin-top:10px; }
     .footer-links { display:flex; justify-content:center; gap:15px; flex-wrap:wrap; margin-top:30px; }
-    .footer-links a, .footer-links button { display:inline-flex;align-items:center;gap:8px; background:rgba(255,255,255,0.2);padding:8px 12px;border-radius:5px;text-decoration:none;color:inherit;font-weight:bold; }
+    .footer-links a, .footer-links button { display:inline-flex;align-items:center;gap:8px;
+      background:rgba(255,255,255,0.2);padding:8px 12px;border-radius:5px;text-decoration:none;color:inherit;font-weight:bold; }
     .flag-icon { width:20px;height:14px; }
     .help-bubble { position:fixed;bottom:20px;right:20px;background:white;color:#e63946;border:2px solid #e63946;border-radius:50%;width:50px;height:50px;display:flex;justify-content:center;align-items:center;font-size:24px;cursor:pointer;z-index:10; }
     .help-popup { position:fixed;bottom:80px;right:20px;background:white;border-radius:8px;padding:15px;box-shadow:0 4px 12px rgba(0,0,0,0.3);max-width:300px;font-size:14px;display:none;z-index:11;color:#333; }
@@ -31,6 +33,7 @@
     <h1 id="titre">Calcul de ton métabolisme de base</h1>
     <p id="accroche">Découvre combien de calories il te faut selon ton objectif et ton activité.</p>
     <form>
+      <!-- Objectif -->
       <label id="objectifLabel" for="objectif">Quel est ton objectif ?</label>
       <select id="objectif" name="objectif">
         <option value="maintien">Maintien</option>
@@ -40,12 +43,14 @@
         <option value="surplus10">Prise ~1 kg/mois</option>
       </select>
 
+      <!-- Sexe -->
       <label id="sexeLabel" for="sexe">Sexe de naissance</label>
       <select id="sexe" name="sexe">
         <option value="homme">Homme</option>
         <option value="femme">Femme</option>
       </select>
 
+      <!-- Poids, taille, âge -->
       <label id="poidsLabel" for="poids">Poids (kg)</label>
       <input type="number" id="poids" name="poids" required>
 
@@ -55,6 +60,7 @@
       <label id="ageLabel" for="age">Âge (années)</label>
       <input type="number" id="age" name="age" required>
 
+      <!-- Activité -->
       <label id="activiteLabel" for="activite">Niveau d’activité</label>
       <select id="activite" name="activite">
         <option value="1.2">🚶‍♂️ Sédentaire</option>
@@ -66,6 +72,18 @@
 
       <button type="submit" id="calculerBtn">Calculer</button>
     </form>
+
+    <!-- Details -->
+    <details><summary id="quiSuisJe">Qui suis-je ?</summary>
+      <p id="bio">Je m'appelle Alexis, j'ai 22 ans, je suis très solaire et souriant. Coach passionné, je t'aide à atteindre tes objectifs !</p>
+    </details>
+    <details><summary id="formuleTitre">Formule utilisée</summary>
+      <p id="formuleTexte">Formule Harris‑Benedict :<br>
+        – Homme : MB = 66.5 + 13.75×poids + 5.003×taille – 6.775×âge<br>
+        – Femme : MB = 655.1 + 9.563×poids + 1.850×taille – 4.676×âge</p>
+    </details>
+
+    <!-- Footer -->
     <div class="footer-links">
       <button onclick="toggleLang()" id="langBtn">
         <img src="https://flagcdn.com/fr.svg" id="flagIcon" class="flag-icon">
@@ -76,6 +94,8 @@
       <a href="#outil-premium">🔒 Outil Premium</a>
     </div>
   </div>
+
+  <!-- Bulle aide -->
   <div class="help-bubble" onclick="toggleHelp()">❓</div>
   <div class="help-popup" id="helpPopup">
     <strong>Aide rapide :</strong><br/>
@@ -86,94 +106,73 @@
   </div>
 
   <script>
-    const body = document.body,
-          modeIcon = document.getElementById('modeIcon'),
-          bgVideo = document.getElementById('bgVideo'),
-          flagIcon = document.getElementById('flagIcon'),
-          langText = document.getElementById('langText'),
-          titre = document.getElementById('titre'),
-          accroche = document.getElementById('accroche'),
-          objectifLabel = document.getElementById('objectifLabel'),
-          sexeLabel = document.getElementById('sexeLabel'),
-          poidsLabel = document.getElementById('poidsLabel'),
-          tailleLabel = document.getElementById('tailleLabel'),
-          ageLabel = document.getElementById('ageLabel'),
-          activiteLabel = document.getElementById('activiteLabel'),
-          btn = document.getElementById('calculerBtn'),
-          popup = document.getElementById('helpPopup');
+    // Références
+    const body=document.body, modeIcon=document.getElementById('modeIcon'),
+          bgVideo=document.getElementById('bgVideo'), flagIcon=document.getElementById('flagIcon'),
+          langText=document.getElementById('langText'), titre=document.getElementById('titre'),
+          accroche=document.getElementById('accroche'), objectifLabel=document.getElementById('objectifLabel'),
+          sexeLabel=document.getElementById('sexeLabel'), poidsLabel=document.getElementById('poidsLabel'),
+          tailleLabel=document.getElementById('tailleLabel'), ageLabel=document.getElementById('ageLabel'),
+          activiteLabel=document.getElementById('activiteLabel'), btn=document.getElementById('calculerBtn'),
+          popup=document.getElementById('helpPopup');
 
-    let isDark = true, isFrench = true;
+    let isDark=true, isFrench=true;
 
-    const translations = {
-      fr: { titre:'Calcul de ton métabolisme de base', accroche:'Découvre combien de calories il te faut selon ton objectif et ton activité.',
-        objectif:['Maintien','Perte ~0.5 kg/mois','Perte ~1 kg/mois','Prise ~0.5 kg/mois','Prise ~1 kg/mois'],
-        sexe:['Homme','Femme'],
-        activite:['Sédentaire','Modéré','Actif','Très Actif','Extrêmement Actif'],
-        calculer:'Calculer', aide:'Aide rapide :\n- Remplis tous les champs.\n- Choisis ton objectif et ton activité.\n- Clique sur "Calculer" pour ton TDEE.\nSi besoin, contacte-moi sur Instagram 🧭'
-      },
-      es: { titre:'Calcula tu metabolismo basal', accroche:'Descubre cuántas calorías necesitas según tu objetivo y actividad.',
-        objectif:['Mantenimiento','Pérdida ~0,5 kg/mes','Pérdida ~1 kg/mes','Ganancia ~0,5 kg/mes','Ganancia ~1 kg/mes'],
-        sexe:['Hombre','Mujer'],
-        activite:['Sedentario','Moderado','Activo','Muy Activo','Extremadamente Activo'],
-        calculer:'Calcular', aide:'Ayuda rápida:\n- Completa todos los campos.\n- Selecciona tu objetivo y actividad.\n- Haz clic en "Calcular" para tu TDEE.\nSi necesitas, contáctame en Instagram 🧭'
-      }
+    const translations={
+      fr:{titre:'Calcul de ton métabolisme de base', accroche:'Découvre combien de calories il te faut selon ton objectif et ton activité.', objectif:['Maintien','Perte ~0.5 kg/mois','Perte ~1 kg/mois','Prise ~0.5 kg/mois','Prise ~1 kg/mois'], sexe:['Homme','Femme'], activite:['Sédentaire','Modéré','Actif','Très Actif','Extrêmement Actif'], calculer:'Calculer', aide:'Aide rapide :\n- Remplis tous les champs.\n- Choisis ton objectif et ton activité.\n- Clique sur "Calculer" pour ton TDEE.\nSi besoin, contacte-moi sur Instagram 🧭'},
+      es:{titre:'Calcula tu metabolismo basal', accroche:'Descubre cuántas calorías necesitas según tu objetivo y actividad.', objectif:['Mantenimiento','Pérdida ~0,5 kg/mes','Pérdida ~1 kg/mes','Ganancia ~0,5 kg/mes','Ganancia ~1 kg/mes'], sexe:['Hombre','Mujer'], activite:['Sedentario','Moderado','Activo','Muy Activo','Extremadamente Activo'], calculer:'Calcular', aide:'Ayuda rápida:\n- Completa todos los campos.\n- Selecciona tu objetivo y actividad.\n- Haz clic en "Calcular" para tu TDEE.\nSi necesitas, contáctame en Instagram 🧭'}
     };
 
-    function toggleMode() {
-      isDark = !isDark;
-      body.classList.toggle('light-mode', !isDark);
-      modeIcon.textContent = isDark?'🌙':'☀️';
-      bgVideo.src = isDark?'video-night.mp4':'video-day.mp4';
+    function toggleMode(){
+      isDark=!isDark;
+      body.classList.toggle('light-mode',!isDark);
+      modeIcon.textContent=isDark?'🌙':'☀️';
+      bgVideo.src=isDark?'video-night.mp4':'video-day.mp4';
     }
 
-    function toggleLang() {
-      isFrench = !isFrench;
-      const lang = isFrench?'fr':'es';
-      flagIcon.src = isFrench?'https://flagcdn.com/fr.svg':'https://flagcdn.com/es.svg';
-      langText.textContent = isFrench?'Français':'Español';
-      const t = translations[lang];
-      titre.textContent = t.titre;
-      accroche.textContent = t.accroche;
-      objectifLabel.textContent = isFrench?'Quel est ton objectif ?':'¿Cuál es tu objetivo?';
-      sexeLabel.textContent = isFrench?'Sexe de naissance':'Sexo de nacimiento';
-      poidsLabel.textContent = isFrench?'Poids (kg)':'Peso (kg)';
-      tailleLabel.textContent = isFrench?'Taille (cm)':'Estatura (cm)';
-      ageLabel.textContent = isFrench?'Âge (années)':'Edad (años)';
-      activiteLabel.textContent = isFrench?'Niveau d’activité':'Nivel de actividad';
-      btn.textContent = t.calculer;
-      popup.innerHTML = '<strong>' + (isFrench?'Aide rapide':'Ayuda rápida') + '</strong><br/>' + t.aide.replace(/\n/g,'<br/>');
-
-      document.querySelectorAll('#objectif option').forEach((opt,i)=>opt.textContent = t.objectif[i]);
-      document.querySelectorAll('#sexe option').forEach((opt,i)=>opt.textContent = t.sexe[i]);
-      document.querySelectorAll('#activite option').forEach((opt,i)=>opt.textContent = t.activite[i]);
+    function toggleLang(){
+      isFrench=!isFrench;
+      const lang=isFrench?'fr':'es';
+      flagIcon.src=isFrench?'https://flagcdn.com/fr.svg':'https://flagcdn.com/es.svg';
+      langText.textContent=isFrench?'Français':'Español';
+      const t=translations[lang];
+      titre.textContent=t.titre;
+      accroche.textContent=t.accroche;
+      objectifLabel.textContent=isFrench?'Quel est ton objectif ?':'¿Cuál es tu objetivo?';
+      sexeLabel.textContent=isFrench?'Sexe de naissance':'Sexo de nacimiento';
+      poidsLabel.textContent=isFrench?'Poids (kg)':'Peso (kg)';
+      tailleLabel.textContent=isFrench?'Taille (cm)':'Estatura (cm)';
+      ageLabel.textContent=isFrench?'Âge (années)':'Edad (años)';
+      activiteLabel.textContent=isFrench?'Niveau d’activité':'Nivel de actividad';
+      btn.textContent=t.calculer;
+      popup.innerHTML='<strong>'+(isFrench?'Aide rapide':'Ayuda rápida')+'</strong><br/>'+t.aide.replace(/\n/g,'<br/>');
+      document.querySelectorAll('#objectif option').forEach((o,i)=>o.textContent=t.objectif[i]);
+      document.querySelectorAll('#sexe option').forEach((o,i)=>o.textContent=t.sexe[i]);
+      document.querySelectorAll('#activite option').forEach((o,i)=>o.textContent=t.activite[i]);
     }
 
     function toggleHelp(){
-      popup.style.display = popup.style.display === 'block' ? 'none':'block';
+      popup.style.display=(popup.style.display==='block')?'none':'block';
     }
 
-    document.querySelector('form').addEventListener('submit', e=>{
+    document.querySelector('form').addEventListener('submit',e=>{
       e.preventDefault();
-      const poids= parseFloat(document.getElementById('poids').value),
-            taille= parseFloat(document.getElementById('taille').value),
-            age= parseFloat(document.getElementById('age').value),
-            sexe= document.getElementById('sexe').value,
-            objectif= document.getElementById('objectif').value,
-            activite= parseFloat(document.getElementById('activite').value);
-
+      const poids=parseFloat(document.getElementById('poids').value),
+            taille=parseFloat(document.getElementById('taille').value),
+            age=parseFloat(document.getElementById('age').value),
+            sexe=document.getElementById('sexe').value,
+            objectif=document.getElementById('objectif').value,
+            activite=parseFloat(document.getElementById('activite').value);
       if(!poids||!taille||!age||!sexe||!objectif||!activite){
         alert(isFrench?"Merci de remplir tous les champs !":"¡Completa todos los campos!");
         return;
       }
-
-      const mb = sexe==='homme'
-        ? 66.5 +13.75*poids+5.003*taille-6.775*age
-        : 655.1 +9.563*poids+1.85*taille-4.676*age;
-
-      const coefObj = {deficit10:0.80,deficit5:0.90,maintien:1.00,surplus5:1.10,surplus10:1.20}[objectif];
-      const tdee= Math.round(mb * coefObj * activite);
-      alert(`${isFrench?"🔥 Besoin calorique estimé":"🔥 Necesitas aproximadamente"}: ${tdee} kcal ${isFrench?"/ jour":"/ día"}`);
+      const mb = sexe==='homme'?66.5+13.75*poids+5.003*taille-6.775*age:655.1+9.563*poids+1.85*taille-4.676*age;
+      const coefObj={deficit10:0.8,deficit5:0.9,maintien:1,surplus5:1.1,surplus10:1.2}[objectif];
+      const tdee=Math.round(mb*coefObj*activite);
+      alert((isFrench?"🔥 Besoin calorique estimé":"🔥 Necesitas aproximadamente")+": "+tdee+" kcal "+(isFrench?"/ jour":"/ día"));
     });
   </script>
 </body>
 </html>
+
