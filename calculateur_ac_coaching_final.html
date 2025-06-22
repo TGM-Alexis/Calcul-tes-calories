@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AC Coaching - Calcul des besoins caloriques</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bg-color: #1e1e1e;
+      --container-bg: #101010;
+      --text-color: #f5f5f5;
+      --input-bg: #1e1e1e;
+      --highlight: #ff5f00;
+      --secondary: #ff5f00;
+      --result-bg: #222;
+      --result-text: #ffd;
+    }
+    .light-mode {
+      --bg-color: #f4f4f4;
+      --container-bg: #ffffff;
+      --text-color: #121212;
+      --input-bg: #ffffff;
+      --highlight: #ff5f00;
+      --secondary: #ff5f00;
+      --result-bg: #f0f0f0;
+      --result-text: #000000;
+    }
+    * {
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    body {
+      background: linear-gradient(135deg, #0d0d0d, #1a1a1a), url('https://images.unsplash.com/photo-1605296867304-46d5465a13f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat fixed;
+      transition: background 0.4s ease, color 0.4s ease;
+      margin: 0;
+      padding: 0;
+      background: var(--bg-color);
+      color: var(--text-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .container {
+      transition: background 0.4s ease, color 0.4s ease;
+      width: 100%;
+      max-width: 500px;
+      background: var(--container-bg);
+      padding: 2.5rem 2rem;
+      border-radius: 24px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      position: relative;
+    }
+    .logo {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--highlight);
+      letter-spacing: 1px;
+    }
+    h1 {
+      color: var(--text-color);
+      margin: 60px 0 1.8rem;
+      font-size: 1.3rem;
+    }
+    label {
+      font-weight: 600;
+      display: block;
+      margin: 1rem 0 0.3rem;
+      font-size: 0.95rem;
+    }
+    input, select {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid var(--secondary);
+      border-radius: 12px;
+      background: var(--input-bg);
+      color: var(--text-color);
+      font-size: 1rem;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--highlight);
+    }
+    button {
+      margin-top: 2rem;
+      width: 100%;
+      padding: 1rem;
+      background: linear-gradient(45deg, var(--highlight), var(--secondary));
+      color: white;
+      border: none;
+      border-radius: 14px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      opacity: 0.9;
+    }
+    .insta-bottom {
+      margin-top: 2.5rem;
+      text-align: center;
+    }
+    .insta-bottom a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #E1306C;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1rem;
+    }
+    .insta-bottom a:hover {
+      opacity: 0.85;
+    }
+    #resultat {
+      transition: background 0.4s ease, color 0.4s ease;
+      margin-top: 2rem;
+      padding: 1.2rem;
+      background-color: var(--result-bg);
+      border-left: 5px solid var(--highlight);
+      border-radius: 10px;
+      font-weight: bold;
+      text-align: center;
+      color: var(--result-text);
+      font-size: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo"><i class="fas fa-bolt" style="margin-right: 6px;"></i>AC Coaching</div>
+    <h1>Calcule les calories qu'il te faut pour atteindre ton objectif</h1>
+    <form id="bmrForm">
+      <label for="sexe">Sexe de naissance</label>
+      <select id="sexe" required>
+        <option value="homme">Homme</option>
+        <option value="femme">Femme</option>
+      </select>
+      <label for="age">Âge</label>
+      <input type="number" id="age" required>
+      <label for="poids">Poids (kg)</label>
+      <input type="number" id="poids" required>
+      <label for="taille">Taille (cm)</label>
+      <input type="number" id="taille" required>
+      <label for="activite">Niveau d'activité</label>
+      <select id="activite" required>
+        <option value="1.2">Sédentaire</option>
+        <option value="1.4">Actif(ve)</option>
+        <option value="1.6">Très actif(ve)</option>
+        <option value="1.8">Extrêmement actif(ve)</option>
+      </select>
+      <label for="objectif">Objectif</label>
+      <select id="objectif" required>
+        <option value="perte">Perte de poids</option>
+        <option value="maintien">Maintien</option>
+        <option value="prise">Prise de poids</option>
+      </select>
+      <button type="button" onclick="calculer()">Calculer</button>
+    </form>
+    <div id="resultat"></div>
+    <div class="insta-bottom">
+      <p style="margin: 2rem 0 0.5rem; font-size: 1rem; color: var(--text-color); text-align: center;">Envie d’un suivi personnalisé ?</p>
+      <a href="https://www.instagram.com/alexis.champroux" target="_blank">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Instagram" style="width: 20px; height: 20px; vertical-align: middle;"> Suis-moi sur Instagram
+      </a>
+    </div>
+  </div>
+  <script>
+    function calculer() {
+      const sexe = document.getElementById("sexe").value;
+      const age = parseFloat(document.getElementById("age").value);
+      const poids = parseFloat(document.getElementById("poids").value);
+      const taille = parseFloat(document.getElementById("taille").value);
+      const activite = parseFloat(document.getElementById("activite").value);
+      const objectif = document.getElementById("objectif").value;
+      let bmr;
+      if (sexe === "homme") {
+        bmr = (10 * poids) + (6.25 * taille) - (5 * age) + 5;
+      } else {
+        bmr = (10 * poids) + (6.25 * taille) - (5 * age) - 161;
+      }
+      const dej = bmr * activite;
+      let aetq;
+      if (objectif === "perte") {
+        aetq = dej * 0.90;
+      } else if (objectif === "prise") {
+        aetq = dej * 1.10;
+      } else {
+        aetq = dej;
+      }
+      document.getElementById("resultat").innerHTML =
+        `<div style='font-size: 1.1rem; padding: 1rem 0;'>
+          <span style='display: block; color: var(--highlight); font-size: 1.2rem;'><span style='color: white;'>BMR : ${bmr.toFixed(0)} kcal/jour</span></span>
+          <span style='display: block; margin: 0.5rem 0;'>DEJ : ${dej.toFixed(0)} kcal/jour</span>
+          <span style='display: block;'><mark style='background-color: var(--highlight); color: white; padding: 0 6px; border-radius: 4px;'>AETQ : ${aetq.toFixed(0)} kcal/jour</mark></span>
+        </div>`;
+    }
+  </script>
+</body>
+</html>
